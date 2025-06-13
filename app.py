@@ -1,8 +1,11 @@
 import random
+import os
 
+def limpar_tela():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 class Personagem:
-    def __init__(self, nome):
+    def __init__(self, nome): 
         self.nome = nome
         self.vida_atual = 100
         self.vida_maxima = 100
@@ -14,8 +17,8 @@ class Personagem:
     def levar_dano(self):
         self.vida_atual -= self.pontos_de_ataque
     
-    def usar_carta(self):
-        pass
+    def usar_carta(self, carta):
+        print("DEBUG")
         
     
     
@@ -29,7 +32,10 @@ class Carta:
         self.energia_gasta = energia
         self.descricao = descricao
         
-    def usar():
+    def usar(self, carta, jogador):
+        print("DEBUG")
+            
+            
         pass
     
     
@@ -40,44 +46,101 @@ class CartaAumento(Carta):
         self.pontos_aumentados = pontos_aumentados
         
         
-        
     
     
     
-class Partida:
+class Partida():
     def __init__(self, player1, player2, jogador_atual):
         self.turno = 0
         self.player1 = player1
         self.player2 = player2
         self.jogador_atual = jogador_atual
-        
+                
+    def listar_cartas(self):
+        os.system("cls")
+        print(f"\n🎮 Jogador {self.jogador_atual} inicia a partida!")
+        print("🃏 Essas são suas cartas na mão:\n")
+
+        if self.jogador_atual == 1:  
+            for idx, carta in enumerate(self.player1.mao_de_cartas, 1):
+                print(f"┌── Carta {idx} ───────────────────────────────────┐")
+                print(f"│ 📛 Nome: {carta.nome}")
+                print(f"│ ⚡ Energia : {carta.energia_gasta}")
+                print(f"│ 📝 Descrição : {carta.descricao}")
+                print("└──────────────────────────────────────────────────────┘\n")
+        if self.jogador_atual ==2:
+            for idx, carta in enumerate(self.player2.mao_de_cartas, 1):
+                print(f"┌── Carta {idx}────────────────────────────────────┐")
+                print(f"│ 📛 Nome: {carta.nome}")
+                print(f"│ ⚡ Custo de Energia : {carta.energia_gasta}")
+                print(f"│ 📝 Descrição : {carta.descricao}")
+                print("└─────────────────────────────────────────────────────────────┘\n") 
+                
     def iniciar(self):
-        print(f"{self.jogador_atual} Inicia a partida")
+        limpar_tela()
+        print(f"\n🎮 Jogador {self.jogador_atual} inicia a partida!")
+        opcao = int(input("Escolha uma das opções\n1-Usar uma carta\n2-Atacar\n3-Pescar Uma carta\n"))
         
-        
-        
+        match opcao:
+            case 1:
+                limpar_tela()
+                self.listar_cartas()
+                escolha = int(input("Digite o numero da carta! que você deseja usar\n"))
+                limpar_tela()
+                if self.jogador_atual == 1:
+                    carta_escolhida = self.player1.mao_de_cartas[escolha - 1]
+                    if hasattr(carta_escolhida, "tipo"):
+                        if carta_escolhida.tipo == "Utilitario":
+                            player1.usar_carta(carta_escolhida)
 
+                else:
+                    carta_escolhida = self.player2.mao_de_cartas[escolha - 1]
+                    if hasattr(carta_escolhida, "tipo"):
+                        if carta_escolhida.tipo == "Utilitario":
+                            player2.usar_carta(carta_escolhida)
+
+
+    
+                
+            
+             
 if __name__ == "__main__":
-    carta_vida = CartaAumento("Carta De Vida", 5, "Carta que aumenta em 25 a vida máxima do jogador", "Vida", 25 )
-    carta_defesa = CartaAumento("Carta De Defesa", 5, "Carta que aumenta em 25 a defesa do jogador", "Defesa", 25 )
-    carta_ataque = CartaAumento("Carta De Ataque", 5, "Carta que aumenta em 25 o Ataque do jogador", "Ataque", 25 )
-    carta_energia = CartaAumento("Carta De Energia", 5, "Carta que aumenta em 25 a energia do jogador", "Energia", 25 )
-
-
+    limpar_tela()
+    cartas = [] 
+    carta_vida = CartaAumento("Carta De Vida", 5, "Carta que aumenta em 25 a vida máxima do jogador", "Utilitario", 25 )
+    carta_defesa = CartaAumento("Carta De Defesa", 5, "Carta que aumenta em 25 a defesa do jogador", "Utilitario", 25 )
+    carta_ataque = CartaAumento("Carta De Ataque", 5, "Carta que aumenta em 25 o Ataque do jogador", "Utilitario", 25 )
+    carta_energia = CartaAumento("Carta De Energia", 5, "Carta que aumenta em 25 a energia do jogador", "Utilitario", 25 )
+    carta_roubo = Carta("Carta De Roubo", 3, "Quando jogada, ela rouba uma carta do oponente")
+    carta_stun = Carta("Carta De Stun", 3, "Quando jogada, ela atordoa o inimigo por 2 rodadas")
+    carta_dano = Carta("Carta que causa dano", 3, "Causa 10 de dano no adversário inimigo")
+    carta_cura = Carta("Carta que cura vida", 3, "Cura de 10 de vida do seu Personagem")
+    cartas = [carta_vida, carta_defesa, carta_ataque, carta_energia, carta_roubo, carta_stun, carta_dano, carta_cura]
+    
+    
     jogador1 = input("Digite seu nome jogador 1")
+    limpar_tela()
     jogador2 = input("Digite seu nome jogador 2")
+    limpar_tela()
     vencedor = None
     dado = random.randint(1,2)
     if dado == 1:
-        vencedor = jogador1
+        vencedor = 1
         print("Jogador 1 Começa")
     else:
-        vencedor = jogador2
+        vencedor = 2
         print("Jogador 2 Começa")
     player1 = Personagem(jogador1)
     player2 = Personagem(jogador2)
     partida = Partida(player1,player2,vencedor)
-    partida.iniciar
+    cartas_aleatorias1 = random.sample(cartas,3)
+    cartas_aleatorias2 = random.sample(cartas,3)
+    player1.mao_de_cartas.extend(cartas_aleatorias1)
+    player2.mao_de_cartas.extend(cartas_aleatorias2)
+    partida.iniciar()
+    
+
+    
     
     
     
