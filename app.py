@@ -14,15 +14,24 @@ class Personagem:
         self.mao_de_cartas = []
         self.energia = 10
     
-    def levar_dano(self):
-        self.vida_atual -= self.pontos_de_ataque
+    def levar_dano(self,dano):
+        self.vida_atual -= dano
     
-    def usar_carta(self, carta):
-        print("DEBUG")
+    def comprar_carta(self):
+        pass
+    
+    def ver_cartas(self):
+        for idx, carta in enumerate(self.mao_de_cartas, 1):
+            print(f"┌── Carta {idx} ───────────────────────────────────┐")
+            print(f"│ 📛 Nome: {carta.nome}")
+            print(f"│ ⚡ Energia : {carta.energia_gasta}")
+            print(f"│ 📝 Descrição : {carta.descricao}")
+            print("└──────────────────────────────────────────────────────┘\n")
+    
+    def curar_se(self):
+        pass
         
     
-    
-        
 
 
 
@@ -45,7 +54,32 @@ class CartaAumento(Carta):
         self.tipo = tipo
         self.pontos_aumentados = pontos_aumentados
         
+class CartaRoubo(Carta):
+    def __init__(self,nome,energia,descricao):
+        super().__init__(nome, energia, descricao)
+    def usar():
+        pass
+
+class CartaAtordoamente(Carta):
+    def __init__(self,nome,energia,descricao):
+        super().__init__(nome, energia, descricao)
         
+    def usar():
+        pass  
+    
+class CartaDano(Carta):
+    def __init__(self,nome,energia,descricao):
+        super().__init__(nome, energia, descricao)
+        
+    def usar():
+        pass    
+    
+class CartaCura(Carta):
+    def __init__(self,nome,energia,descricao):
+        super().__init__(nome, energia, descricao)
+        
+    def usar():
+        pass    
     
     
     
@@ -61,20 +95,11 @@ class Partida():
         print(f"\n🎮 Jogador {self.jogador_atual} inicia a partida!")
         print("🃏 Essas são suas cartas na mão:\n")
 
-        if self.jogador_atual == 1:  
-            for idx, carta in enumerate(self.player1.mao_de_cartas, 1):
-                print(f"┌── Carta {idx} ───────────────────────────────────┐")
-                print(f"│ 📛 Nome: {carta.nome}")
-                print(f"│ ⚡ Energia : {carta.energia_gasta}")
-                print(f"│ 📝 Descrição : {carta.descricao}")
-                print("└──────────────────────────────────────────────────────┘\n")
+        if self.jogador_atual == 1:
+            player1.ver_cartas()  
+            
         if self.jogador_atual ==2:
-            for idx, carta in enumerate(self.player2.mao_de_cartas, 1):
-                print(f"┌── Carta {idx}────────────────────────────────────┐")
-                print(f"│ 📛 Nome: {carta.nome}")
-                print(f"│ ⚡ Custo de Energia : {carta.energia_gasta}")
-                print(f"│ 📝 Descrição : {carta.descricao}")
-                print("└─────────────────────────────────────────────────────────────┘\n") 
+            player2.ver_cartas() 
                 
     def iniciar(self):
         limpar_tela()
@@ -89,15 +114,14 @@ class Partida():
                 limpar_tela()
                 if self.jogador_atual == 1:
                     carta_escolhida = self.player1.mao_de_cartas[escolha - 1]
-                    if hasattr(carta_escolhida, "tipo"):
-                        if carta_escolhida.tipo == "Utilitario":
-                            player1.usar_carta(carta_escolhida)
+                    if carta_escolhida.tipo == "Utilitario":
+                        player1.usar_carta(carta_escolhida)
+                        
 
                 else:
                     carta_escolhida = self.player2.mao_de_cartas[escolha - 1]
-                    if hasattr(carta_escolhida, "tipo"):
-                        if carta_escolhida.tipo == "Utilitario":
-                            player2.usar_carta(carta_escolhida)
+                    if carta_escolhida.tipo == "Utilitario":
+                        player2.usar_carta(carta_escolhida)
 
 
     
@@ -111,10 +135,10 @@ if __name__ == "__main__":
     carta_defesa = CartaAumento("Carta De Defesa", 5, "Carta que aumenta em 25 a defesa do jogador", "Utilitario", 25 )
     carta_ataque = CartaAumento("Carta De Ataque", 5, "Carta que aumenta em 25 o Ataque do jogador", "Utilitario", 25 )
     carta_energia = CartaAumento("Carta De Energia", 5, "Carta que aumenta em 25 a energia do jogador", "Utilitario", 25 )
-    carta_roubo = Carta("Carta De Roubo", 3, "Quando jogada, ela rouba uma carta do oponente")
-    carta_stun = Carta("Carta De Stun", 3, "Quando jogada, ela atordoa o inimigo por 2 rodadas")
-    carta_dano = Carta("Carta que causa dano", 3, "Causa 10 de dano no adversário inimigo")
-    carta_cura = Carta("Carta que cura vida", 3, "Cura de 10 de vida do seu Personagem")
+    carta_roubo = CartaRoubo("Carta De Roubo", 3, "Quando jogada, ela rouba uma carta do oponente")
+    carta_stun = CartaAtordoamente("Carta De Stun", 3, "Quando jogada, ela atordoa o inimigo por 2 rodadas")
+    carta_dano = CartaDano("Carta que causa dano", 3, "Causa 10 de dano no adversário inimigo")
+    carta_cura = CartaCura("Carta que cura vida", 3, "Cura de 10 de vida do seu Personagem")
     cartas = [carta_vida, carta_defesa, carta_ataque, carta_energia, carta_roubo, carta_stun, carta_dano, carta_cura]
     
     
